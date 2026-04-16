@@ -461,7 +461,7 @@ def _generate_fallback_recommendation(state: AgentState) -> dict:
             ),
             "action_items": [
                 "Review existing term insurance policies",
-                f"{'Consider increasing coverage by ₹' + f'{adequacy.get(\"gap\", 0):,.0f}' if adequacy.get('gap', 0) > 0 else 'Coverage is adequate'}",
+                "Consider increasing coverage by ₹{:,.0f}".format(adequacy.get("gap", 0)) if adequacy.get("gap", 0) > 0 else "Coverage is adequate",
                 "Compare term plans with claim settlement ratio > 95%",
             ],
             "confidence": 0.85,

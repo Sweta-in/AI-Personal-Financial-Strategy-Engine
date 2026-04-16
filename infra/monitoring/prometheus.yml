@@ -1,0 +1,44 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: "finengine-backend"
+    static_configs:
+      - targets: ["backend:8000"]
+    metrics_path: /metrics
+    scrape_interval: 10s
+
+  - job_name: "loan-mcp"
+    static_configs:
+      - targets: ["loan-mcp:8001"]
+    metrics_path: /metrics
+    scrape_interval: 30s
+
+  - job_name: "portfolio-mcp"
+    static_configs:
+      - targets: ["portfolio-mcp:8002"]
+    metrics_path: /metrics
+    scrape_interval: 30s
+
+  - job_name: "insurance-mcp"
+    static_configs:
+      - targets: ["insurance-mcp:8003"]
+    metrics_path: /metrics
+    scrape_interval: 30s
+
+  - job_name: "market-mcp"
+    static_configs:
+      - targets: ["market-mcp:8004"]
+    metrics_path: /metrics
+    scrape_interval: 30s
+
+  - job_name: "risk-mcp"
+    static_configs:
+      - targets: ["risk-mcp:8005"]
+    metrics_path: /metrics
+    scrape_interval: 30s
+
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]

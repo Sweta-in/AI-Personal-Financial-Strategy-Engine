@@ -91,7 +91,7 @@ export function AmortizationChart({ data, title }: AmortizationChartProps) {
                 boxShadow: "0 8px 24px rgba(0,0,0,0.4)",
               }}
               labelStyle={{ color: "#94a3b8", fontSize: 12, marginBottom: 8 }}
-              formatter={(value: number, name: string) => [formatINR(value), name]}
+              formatter={(value: unknown, name: unknown) => [formatINR(value as number), name as string]}
             />
 
             <Legend

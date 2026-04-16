@@ -99,9 +99,9 @@ export function MonteCarloChart({ data, title }: MonteCarloChartProps) {
               }}
               labelStyle={{ color: "#94a3b8", fontSize: 12, marginBottom: 8 }}
               labelFormatter={(v) => `Month ${v}`}
-              formatter={(value: number, name: string) => [
-                formatINR(value),
-                name === "p90" ? "Optimistic" : name === "p50" ? "Expected" : "Conservative",
+              formatter={(value: unknown, name: unknown) => [
+                formatINR(value as number),
+                (name as string) === "p90" ? "Optimistic" : (name as string) === "p50" ? "Expected" : "Conservative",
               ]}
             />
 

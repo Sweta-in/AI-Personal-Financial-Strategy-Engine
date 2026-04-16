@@ -71,7 +71,7 @@ export function AssetAllocationChart({
                   padding: "8px 12px",
                   boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
                 }}
-                formatter={(value: number, name: string) => [formatINR(value), name]}
+                formatter={(value: unknown, name: unknown) => [formatINR(value as number), name as string]}
               />
             </PieChart>
           </ResponsiveContainer>
