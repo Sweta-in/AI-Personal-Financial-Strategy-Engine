@@ -1,0 +1,8 @@
+langgraph>=0.0.40
+langchain-groq>=0.1.0
+langchain-core>=0.1.0
+pydantic>=2.5.0
+httpx>=0.25.0
+loguru>=0.7.0
+pytest>=7.4.0
+pytest-asyncio>=0.23.0

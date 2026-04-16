@@ -1,0 +1,161 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: finance_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-finance_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-finance_secret_change_me}
+      POSTGRES_DB: ${POSTGRES_DB:-finance_engine}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-finance_user}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: finance_redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    container_name: finance_backend
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8000}:8000"
+    env_file:
+      - .env
+    environment:
+      POSTGRES_HOST: postgres
+      REDIS_HOST: redis
+      DATABASE_URL: postgresql+asyncpg://finance_user:finance_secret_change_me@postgres:5432/finance_engine
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app/backend
+      - ./quant:/app/quant
+
+  loan_mcp:
+    build:
+      context: .
+      dockerfile: docker/mcp_servers.Dockerfile
+    container_name: finance_loan_mcp
+    restart: unless-stopped
+    command: ["python", "-m", "mcp_servers.loan_mcp.server"]
+    ports:
+      - "8010:8010"
+    env_file:
+      - .env
+    volumes:
+      - ./mcp_servers:/app/mcp_servers
+      - ./quant:/app/quant
+
+  portfolio_mcp:
+    build:
+      context: .
+      dockerfile: docker/mcp_servers.Dockerfile
+    container_name: finance_portfolio_mcp
+    restart: unless-stopped
+    command: ["python", "-m", "mcp_servers.portfolio_mcp.server"]
+    ports:
+      - "8011:8011"
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./mcp_servers:/app/mcp_servers
+      - ./quant:/app/quant
+
+  insurance_mcp:
+    build:
+      context: .
+      dockerfile: docker/mcp_servers.Dockerfile
+    container_name: finance_insurance_mcp
+    restart: unless-stopped
+    command: ["python", "-m", "mcp_servers.insurance_mcp.server"]
+    ports:
+      - "8012:8012"
+    env_file:
+      - .env
+    volumes:
+      - ./mcp_servers:/app/mcp_servers
+      - ./quant:/app/quant
+
+  market_mcp:
+    build:
+      context: .
+      dockerfile: docker/mcp_servers.Dockerfile
+    container_name: finance_market_mcp
+    restart: unless-stopped
+    command: ["python", "-m", "mcp_servers.market_mcp.server"]
+    ports:
+      - "8013:8013"
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./mcp_servers:/app/mcp_servers
+
+  risk_mcp:
+    build:
+      context: .
+      dockerfile: docker/mcp_servers.Dockerfile
+    container_name: finance_risk_mcp
+    restart: unless-stopped
+    command: ["python", "-m", "mcp_servers.risk_mcp.server"]
+    ports:
+      - "8014:8014"
+    env_file:
+      - .env
+    volumes:
+      - ./mcp_servers:/app/mcp_servers
+      - ./ml:/app/ml
+
+  knowledge_mcp:
+    build:
+      context: .
+      dockerfile: docker/mcp_servers.Dockerfile
+    container_name: finance_knowledge_mcp
+    restart: unless-stopped
+    command: ["python", "-m", "mcp_servers.knowledge_mcp.server"]
+    ports:
+      - "8015:8015"
+    env_file:
+      - .env
+    volumes:
+      - ./mcp_servers:/app/mcp_servers
+      - ./rag:/app/rag
+
+volumes:
+  postgres_data:
+  redis_data:

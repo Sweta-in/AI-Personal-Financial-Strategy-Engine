@@ -1,0 +1,20 @@
+[project]
+name = "finance-intelligence-engine"
+version = "1.0.0"
+description = "Production-grade Personal Financial Intelligence Engine"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+
+[tool.ruff]
+target-version = "py311"
+line-length = 120
+select = ["E", "F", "W", "I", "N", "UP", "B", "A", "SIM"]
+ignore = ["E501"]
+
+[tool.ruff.isort]
+known-first-party = ["backend", "quant", "mcp_servers", "agents", "rag", "ml"]
+
+[tool.pytest.ini_options]
+testpaths = ["quant/tests", "backend/tests", "mcp_servers/tests", "agents/tests", "rag/tests", "ml/tests"]
+asyncio_mode = "auto"
+addopts = "-v --tb=short"

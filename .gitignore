@@ -1,0 +1,66 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+.venv/
+venv/
+env/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-compose.override.yml
+
+# Database
+*.db
+*.sqlite3
+
+# ML artifacts
+ml/models/*.pkl
+ml/models/*.joblib
+ml/data/*.csv
+mlruns/
+
+# RAG indexes
+rag/indexes/
+rag/data/*.pdf
+
+# Node / Frontend
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# Terraform
+infra/terraform/.terraform/
+infra/terraform/*.tfstate
+infra/terraform/*.tfstate.backup
+infra/terraform/*.tfvars
+
+# Logs
+*.log
+logs/
+
+# Coverage
+.coverage
+htmlcov/
+coverage.xml
+
+# DVC
+/ml/data/*.csv.dvc
